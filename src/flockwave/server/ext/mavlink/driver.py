@@ -13,7 +13,7 @@ from math import inf, isfinite
 from time import monotonic
 from trio import fail_after, move_on_after, sleep, TooSlowError
 from typing import Any, AsyncIterator, Callable, Optional, Union
-
+from time import  time
 from flockwave.gps.time import datetime_to_gps_time_of_week, gps_time_of_week_to_utc
 from flockwave.gps.vectors import GPSCoordinate, VelocityNED
 
@@ -1865,6 +1865,9 @@ class MAVLinkUAV(UAVBase):
             _, gps_time_of_week = datetime_to_gps_time_of_week(dt)
 
         await self.set_parameter("SHOW_START_TIME", gps_time_of_week)
+        if seconds:
+            await self.set_parameter("SHOW_COUNT_MSEC",(seconds-time())*1000)
+        
 
     async def set_led_color(
         self,
